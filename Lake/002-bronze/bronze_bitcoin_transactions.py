@@ -1,19 +1,29 @@
 # Databricks notebook source
-from pyspark.sql import SparkSession
-
 
 
 # COMMAND ----------
 
-blob_folder_path = "dbfs:/mnt/criptoscamstorage/landing/walletexplorer/*_transactions.csv"
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import *
+
+
+# COMMAND ----------
+
+blob_folder = "dbfs:/mnt/criptoscamstorage/landing/walletexplorer/*_transactions.csv"
 
 # Leia os arquivos CSVs na pasta e armazene-os em um DataFrame
-df = spark.read.csv(blob_folder_path, header=True, inferSchema=True)
+df = spark.read.csv(blob_folder, header=True, inferSchema=True)
 
-# Exiba o DataFrame
-df.show()
+df = df.withColumn("data_carga", current_date())
 
-delta_table_path = "dbfs:/mnt/criptoscamstorage/bronze/transactions/transactions"
-
+df_with_timestamp.display()
 # Salve o DataFrame como uma tabela Delta Lake
-df.write.format("delta").mode("overwrite").saveAsTable('bronze.transactions')
+df.write.format("delta")\
+        .mode("append")\
+        .partitionBy('data_carga')\
+        .saveAsTable('bronze.transactions')
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from bronze.transactions

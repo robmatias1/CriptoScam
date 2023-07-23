@@ -8,3 +8,7 @@ CREATE DATABASE silver
 -- COMMAND ----------
 
 CREATE DATABASE gold
+
+-- COMMAND ----------
+
+
