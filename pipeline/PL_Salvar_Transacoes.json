@@ -1,0 +1,218 @@
+{
+	"name": "PL_Salvar_Transacoes",
+	"properties": {
+		"activities": [
+			{
+				"name": "Carga Transacoes",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "DS_walletExplorer_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"arquivo": {
+								"value": "@pipeline().parameters.arquivo",
+								"type": "Expression"
+							}
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Carga Transacoes",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Carga Transacoes').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Copiar Dados detail",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "WebSource",
+									"additionalColumns": [
+										{
+											"name": "txid",
+											"value": {
+												"value": "@item().transaction",
+												"type": "Expression"
+											}
+										}
+									]
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_WalletExplorer",
+									"type": "DatasetReference",
+									"parameters": {
+										"endpoint": "txid",
+										"searchValue": {
+											"value": "@item().transaction",
+											"type": "Expression"
+										},
+										"tableIndex": "0"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_walletExplorer_csv",
+									"type": "DatasetReference",
+									"parameters": {
+										"arquivo": {
+											"value": "@concat(item().transaction,'_transact_table0.csv')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Copiar Dados transaoes",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Copiar Dados detail",
+									"dependencyConditions": [
+										"Completed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET",
+									"paginationRules": {
+										"supportRFC5988": "true"
+									}
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_Blockchain_transact",
+									"type": "DatasetReference",
+									"parameters": {
+										"txid": {
+											"value": "@item().transaction",
+											"type": "Expression"
+										},
+										"endpoint": "rawtx"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_Json_transact",
+									"type": "DatasetReference",
+									"parameters": {
+										"arquivo": {
+											"value": "@concat(item().transaction,'transaction.json')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"arquivo": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"adr": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-07-27T18:59:14Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

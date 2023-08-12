@@ -1,0 +1,9 @@
+{
+	"name": "CriptoScamFactory",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "3c1c7aea-248b-4d5f-9177-8cce18e7c41b",
+		"tenantId": "ba61204e-44c0-42e4-b4fc-790645eef591"
+	}
+}

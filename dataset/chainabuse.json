@@ -1,0 +1,31 @@
+{
+	"name": "chainabuse",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "chainabusecon",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"url": "https://api.chainabuse.com/v0/"
+			}
+		},
+		"parameters": {
+			"urlrelativa": {
+				"type": "string",
+				"defaultValue": "14fwd64XGE3HgHCknbLVuqWBkL1Lfa1KCw&page=1&perPage=50"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@concat('reports?address=',dataset().urlrelativa,'&page=1&perPage=50')",
+					"type": "Expression"
+				}
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

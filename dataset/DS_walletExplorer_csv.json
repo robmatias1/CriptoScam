@@ -1,0 +1,50 @@
+{
+	"name": "DS_walletExplorer_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BLOBstorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"arquivo": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().arquivo",
+					"type": "Expression"
+				},
+				"folderPath": "walletexplorer",
+				"container": "landing"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "date",
+				"type": "String"
+			},
+			{
+				"name": "received/sent",
+				"type": "String"
+			},
+			{
+				"name": "balance",
+				"type": "String"
+			},
+			{
+				"name": "transaction",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,305 @@
+{
+	"name": "Salvar_WalletExplorer",
+	"properties": {
+		"activities": [
+			{
+				"name": "Carga Enderecos",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "CsvEntrada",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Loop Copiar dados",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Carga Enderecos",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Carga Enderecos').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Copiar Dados",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "WebSource",
+									"additionalColumns": [
+										{
+											"name": "address",
+											"value": {
+												"value": "@item().address",
+												"type": "Expression"
+											}
+										}
+									]
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_WalletExplorer",
+									"type": "DatasetReference",
+									"parameters": {
+										"endpoint": "address",
+										"searchValue": {
+											"value": "@item().address",
+											"type": "Expression"
+										},
+										"tableIndex": "0"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_walletExplorer_csv",
+									"type": "DatasetReference",
+									"parameters": {
+										"arquivo": {
+											"value": "@concat(item().address,'_transactions.csv')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Execute PL Transacoes",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Copiar Dados",
+									"dependencyConditions": [
+										"Completed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "PL_Salvar_Transacoes",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"arquivo": {
+										"value": "@concat(item().address,'_transactions.csv')",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Copiar Dados address",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET",
+									"paginationRules": {
+										"supportRFC5988": "true"
+									}
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_Blockchain_transact",
+									"type": "DatasetReference",
+									"parameters": {
+										"txid": {
+											"value": "@item().address",
+											"type": "Expression"
+										},
+										"endpoint": "rawaddr"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_Json_transact",
+									"type": "DatasetReference",
+									"parameters": {
+										"arquivo": {
+											"value": "@concat(item().address,'_address_balance.json')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Copiar dados_copy1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "JsonSource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "GET"
+									},
+									"formatSettings": {
+										"type": "JsonReadSettings"
+									}
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "chainabuse",
+									"type": "DatasetReference",
+									"parameters": {
+										"urlrelativa": {
+											"value": "@item().address",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Json2",
+									"type": "DatasetReference",
+									"parameters": {
+										"arquivo": {
+											"value": "@concat(item().address,'_report.json')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Execute pipeline databrics",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Loop Copiar dados",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "dataBrics",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"variables": {
+			"adr": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-08-12T15:04:25Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

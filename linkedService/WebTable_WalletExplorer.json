@@ -1,0 +1,16 @@
+{
+	"name": "WebTable_WalletExplorer",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "Web",
+		"typeProperties": {
+			"url": "https://www.walletexplorer.com/",
+			"authenticationType": "Anonymous"
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntime1",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

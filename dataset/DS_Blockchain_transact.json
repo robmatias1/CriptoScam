@@ -1,0 +1,27 @@
+{
+	"name": "DS_Blockchain_transact",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Rest_Blockchair",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"txid": {
+				"type": "string"
+			},
+			"endpoint": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@concat(dataset().endpoint,'/',dataset().txid)",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

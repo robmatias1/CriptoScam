@@ -1,0 +1,43 @@
+{
+	"name": "Parquet1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "part-00000-c70f0556-fe55-4c00-8351-bf12b329358a-c000.snappy.parquet",
+				"folderPath": "transactions/transactions",
+				"fileSystem": "bronze"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "date",
+				"type": "INT96"
+			},
+			{
+				"name": "received/sent",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "balance",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "transaction",
+				"type": "UTF8"
+			},
+			{
+				"name": "address",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

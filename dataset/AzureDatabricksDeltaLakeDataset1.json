@@ -1,0 +1,16 @@
+{
+	"name": "AzureDatabricksDeltaLakeDataset1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CriptoScamDeltaLakeCON",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureDatabricksDeltaLakeDataset",
+		"typeProperties": {
+			"database": "default"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

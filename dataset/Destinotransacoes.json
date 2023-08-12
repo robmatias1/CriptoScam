@@ -1,0 +1,33 @@
+{
+	"name": "Destinotransacoes",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BLOBstorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"nomearquivo": {
+				"type": "string",
+				"defaultValue": "transac"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@concat(dataset().nomearquivo,'.csv')",
+					"type": "Expression"
+				},
+				"container": "landing"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

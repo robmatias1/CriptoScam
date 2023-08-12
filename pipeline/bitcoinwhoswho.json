@@ -1,0 +1,59 @@
+{
+	"name": "bitcoinwhoswho",
+	"properties": {
+		"activities": [
+			{
+				"name": "json Api",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"supportRFC5988": "true"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "RestApi",
+						"type": "DatasetReference",
+						"parameters": {
+							"urlrelativa": "2c5af957-8bc958bc-f6b2ddb2-b7c6f3d1?text=Ransome"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Json_bitcoinAPI",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2023-07-21T21:37:48Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

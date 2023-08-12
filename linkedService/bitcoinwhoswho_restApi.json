@@ -1,0 +1,13 @@
+{
+	"name": "bitcoinwhoswho_restApi",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://bitcoinwhoswho.com/api/tag/",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}

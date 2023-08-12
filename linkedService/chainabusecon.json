@@ -1,0 +1,29 @@
+{
+	"name": "chainabusecon",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"parameters": {
+			"url": {
+				"type": "string",
+				"defaultValue": "https://api.chainabuse.com/v0/reports?address=14fwd64XGE3HgHCknbLVuqWBkL1Lfa1KCw&page=1&perPage=50"
+			}
+		},
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "@{linkedService().url}",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous",
+			"authHeaders": {
+				"accept": {
+					"type": "SecureString",
+					"value": "**********"
+				},
+				"authorization": {
+					"type": "SecureString",
+					"value": "**********"
+				}
+			}
+		}
+	}
+}

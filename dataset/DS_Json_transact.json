@@ -1,0 +1,29 @@
+{
+	"name": "DS_Json_transact",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BLOBstorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"arquivo": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().arquivo",
+					"type": "Expression"
+				},
+				"folderPath": "walletexplorer",
+				"container": "landing"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

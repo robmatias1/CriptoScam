@@ -1,0 +1,23 @@
+{
+	"name": "HttpServer1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"parameters": {
+			"apikey": {
+				"type": "string",
+				"defaultValue": "2c5af957-8bc958bc-f6b2ddb2-b7c6f3d1"
+			},
+			"tag": {
+				"type": "string",
+				"defaultValue": "Ransome"
+			}
+		},
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://bitcoinwhoswho.com/api/tag/2c5af957-8bc958bc-f6b2ddb2-b7c6f3d1?text=Ransome",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}

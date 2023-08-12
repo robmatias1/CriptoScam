@@ -1,0 +1,62 @@
+{
+	"name": "Json2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BLOBstorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"arquivo": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().arquivo",
+					"type": "Expression"
+				},
+				"folderPath": "chainabuse",
+				"container": "landing"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"name": {
+					"type": "string"
+				},
+				"url": {
+					"type": "string"
+				},
+				"category": {
+					"type": "string"
+				},
+				"subcategory": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				},
+				"reporter": {
+					"type": "string"
+				},
+				"addresses": {
+					"type": "object",
+					"properties": {
+						"ETH": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

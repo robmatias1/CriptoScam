@@ -1,0 +1,32 @@
+{
+	"name": "Json1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HttpServer1",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"apikey": "2c5af957-8bc958bc-f6b2ddb2-b7c6f3d1",
+				"tag": "Ransome"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"status": {
+					"type": "string"
+				},
+				"tags": {
+					"type": "array"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,19 @@
+{
+	"name": "Binary1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BLOBstorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "d8f6966f-7bf2-4c5f-96c0-c34739e021cc",
+				"container": "landing"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,27 @@
+{
+	"name": "DS_WalletExplorer_blob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BLOBstorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"arquivo": {
+				"type": "string",
+				"defaultValue": "teste.parquet"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "walletexplorer",
+				"container": "landing"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,35 @@
+{
+	"name": "DS_WalletExplorer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WebTable_WalletExplorer",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"endpoint": {
+				"type": "string"
+			},
+			"searchValue": {
+				"type": "string"
+			},
+			"tableIndex": {
+				"type": "string",
+				"defaultValue": "0"
+			}
+		},
+		"annotations": [],
+		"type": "WebTable",
+		"schema": [],
+		"typeProperties": {
+			"index": {
+				"value": "@int(dataset().tableIndex)",
+				"type": "Expression"
+			},
+			"path": {
+				"value": "@concat(dataset().endpoint,'/',dataset().searchValue)",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

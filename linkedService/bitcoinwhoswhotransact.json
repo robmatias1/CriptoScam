@@ -1,0 +1,16 @@
+{
+	"name": "bitcoinwhoswhotransact",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "Web",
+		"typeProperties": {
+			"url": "https://www.bitcoinwhoswho.com/address/",
+			"authenticationType": "Anonymous"
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntime1",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
